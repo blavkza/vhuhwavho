@@ -171,9 +171,7 @@ const WeatherWidget = () => {
         setWeatherData((prev) => ({ ...prev, isLoading: true, error: null }));
 
         // Use WeatherAPI.com as primary (in metric/Celsius)
-        const weatherApiKey =
-          process.env.NEXT_PUBLIC_WEATHERAPI_KEY ||
-          "c0a7c7b7c7b7403b8c7b7c7b7403b8c7"; // Fallback to demo key
+        const weatherApiKey = process.env.NEXT_PUBLIC_WEATHERAPI_KEY;
         const response = await fetch(
           `https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${userLocation.lat},${userLocation.lon}&aqi=no`
         );
