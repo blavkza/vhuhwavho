@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Globe,
   Database,
@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Star,
   Image as ImageIcon,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 
 interface ProjectImage {
@@ -43,10 +45,30 @@ interface Project {
 interface ProjectDialogProps {
   project: Project;
   onClose?: () => void;
+  onMaximize?: () => void;
+  isMaximized?: boolean;
 }
 
-export const ProjectDialog = ({ project, onClose }: ProjectDialogProps) => {
+export const ProjectDialog = ({
+  project,
+  onClose,
+  onMaximize,
+  isMaximized = false,
+}: ProjectDialogProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [contentHeight, setContentHeight] = useState("auto");
+
+  useEffect(() => {
+    // Calculate content height based on window state
+    if (isMaximized) {
+      setContentHeight("calc(100vh - 100px)"); // Full height minus some padding
+    } else if (isMinimized) {
+      setContentHeight("400px"); // Compact height for minimized
+    } else {
+      setContentHeight("600px"); // Default dialog height
+    }
+  }, [isMaximized, isMinimized]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -114,12 +136,202 @@ export const ProjectDialog = ({ project, onClose }: ProjectDialogProps) => {
     );
   };
 
+  // If minimized, show compact view
+  if (isMinimized) {
+    return (
+      <div className="h-full w-full bg-white dark:bg-gray-900 overflow-y-auto">
+        {/* Compact Header */}
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-10 h-10 rounded-lg ${project.imageColor} flex items-center justify-center`}
+            >
+              {getProjectIcon(project.title)}
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                {project.title}
+              </h2>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    project.status === "Completed"
+                      ? "bg-green-500/20 text-green-500"
+                      : "bg-yellow-500/20 text-yellow-500"
+                  }`}
+                >
+                  {project.status}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {project.technologies.slice(0, 2).join(", ")}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsMinimized(false)}
+              className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+              title="Restore"
+            >
+              <Maximize2
+                size={16}
+                className="text-gray-600 dark:text-gray-400"
+              />
+            </button>
+            {onMaximize && (
+              <button
+                onClick={onMaximize}
+                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+                title={isMaximized ? "Restore" : "Maximize"}
+              >
+                {isMaximized ? (
+                  <Minimize2
+                    size={16}
+                    className="text-gray-600 dark:text-gray-400"
+                  />
+                ) : (
+                  <Maximize2
+                    size={16}
+                    className="text-gray-600 dark:text-gray-400"
+                  />
+                )}
+              </button>
+            )}
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center transition-colors"
+                title="Close"
+              >
+                <X size={16} className="text-red-500" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Compact Content */}
+        <div className="p-6 space-y-4" style={{ height: contentHeight }}>
+          <p className="text-gray-600 dark:text-gray-300 line-clamp-3">
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.slice(0, 4).map((tech, index) => (
+              <span
+                key={index}
+                className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded"
+              >
+                {tech}
+              </span>
+            ))}
+            {project.technologies.length > 4 && (
+              <span className="text-xs text-gray-500">
+                +{project.technologies.length - 4} more
+              </span>
+            )}
+          </div>
+
+          <div className="flex gap-3">
+            {project.liveUrl && (
+              <button
+                onClick={() => window.open(project.liveUrl, "_blank")}
+                className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-colors text-sm"
+              >
+                <ExternalLink size={14} />
+                Live Demo
+              </button>
+            )}
+            {project.githubUrl && (
+              <button
+                onClick={() => window.open(project.githubUrl, "_blank")}
+                className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-800 text-white px-3 py-2 rounded-lg transition-colors text-sm"
+              >
+                <Code size={14} />
+                GitHub
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Full view
   return (
     <div className="h-full w-full bg-white dark:bg-gray-900 overflow-y-auto">
-      {/* Header */}
+      {/* Full Header */}
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div
+            className={`w-12 h-12 rounded-xl ${project.imageColor} flex items-center justify-center`}
+          >
+            {getProjectIcon(project.title)}
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {project.title}
+            </h2>
+            <div className="flex items-center gap-3 mt-1">
+              <span
+                className={`text-sm font-medium px-3 py-1 rounded-full ${
+                  project.status === "Completed"
+                    ? "bg-green-500/20 text-green-500"
+                    : "bg-yellow-500/20 text-yellow-500"
+                }`}
+              >
+                {project.status}
+              </span>
+              <span className="text-sm text-gray-500">
+                {project.technologies.length} technologies
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsMinimized(true)}
+            className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+            title="Minimize"
+          >
+            <Minimize2 size={18} className="text-gray-600 dark:text-gray-400" />
+          </button>
+          {onMaximize && (
+            <button
+              onClick={onMaximize}
+              className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+              title={isMaximized ? "Restore" : "Maximize"}
+            >
+              {isMaximized ? (
+                <Minimize2
+                  size={18}
+                  className="text-gray-600 dark:text-gray-400"
+                />
+              ) : (
+                <Maximize2
+                  size={18}
+                  className="text-gray-600 dark:text-gray-400"
+                />
+              )}
+            </button>
+          )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center transition-colors"
+              title="Close"
+            >
+              <X size={18} className="text-red-500" />
+            </button>
+          )}
+        </div>
+      </div>
 
-      {/* Content */}
-      <div className="p-2 space-y-6">
+      {/* Full Content */}
+      <div
+        className="p-6 space-y-6"
+        style={{ height: contentHeight, overflowY: "auto" }}
+      >
         {/* Project Image Slider */}
         <div className="relative h-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
           {project.images.length > 0 ? (
