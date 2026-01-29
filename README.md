@@ -1,58 +1,38 @@
-# MacOS-Inspired Developer Portfolio
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A premium, interactive developer portfolio designed to mimic the macOS desktop environment. Built with Next.js, Tailwind CSS, and Framer Motion.
+## Getting Started
 
-## 🌟 Features
+First, run the development server:
 
-### 🖥️ Desktop Environment
-- **Virtual File System**: Fully functional file management system with folders, files, and navigation.
-- **Finder App**: Browse project folders (Nike, AI, Food App) with breadcrumbs and back navigation.
-- **Dock**: Floating dock with magnification, bounce animations, and a working Trash bin.
-- **Top Bar**: Real-time clock, system menus (Apple, File, Edit), and status icons.
-- **Desktop Icons**: Draggable-ready icons for projects and files.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-### 🪟 Window Management
-- **Draggable & Resizable**: Windows can be moved and resized.
-- **Minimize/Maximize**: Smooth animations for window states.
-- **Z-Index Stacking**: Active windows automatically move to the foreground.
-- **Glassmorphism**: Premium blur effects on windows and overlays.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### 🚀 System Apps & Features
-- **Spotlight Search (Cmd+K)**: Quick access to apps.
-- **Control Center**: Toggles for Theme, Wi-Fi, Bluetooth, etc.
-- **Notification Center**: System notifications accessible via the clock.
-- **Wallpaper Selector**: Dynamic background switching.
-- **About This Mac**: System information modal.
-- **Resume**: Dedicated PDF-style resume viewer.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 🛠️ Tech Stack
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- **Framework**: [Next.js 14+](https://nextjs.org/) (App Router)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **3D**: [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
+## Learn More
 
-## 🚀 Getting Started
+To learn more about Next.js, take a look at the following resources:
 
-1. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-2. **Run Development Server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) to view the portfolio.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-3. **Build for Production**:
-   ```bash
-   npm run build
-   ```
+## Deploy on Vercel
 
-## 📄 License
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-MIT
-# vhuhwavho
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# auto-engage
